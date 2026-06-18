@@ -2,6 +2,8 @@
 
 > Motor de inferencia basado en reglas desarrollado con **CLIPS 6.3x** para la asignatura de Inteligencia Artificial (IA) — Grado en Ingeniería Informática.
 
+*Read this in other languages: [English](#-real-estate-recommender-expert-system-english)*
+
 ---
 
 ## 📋 Descripción General
@@ -261,6 +263,274 @@ python3 scripts/porcentajes.py
 ## 👥 Autores
 
 Desarrollado por **Ishak Felfoul** y **Eduard Corrons** como práctica académica para la asignatura **Inteligencia Artificial (IA)** del Grado en Ingeniería Informática.
+
+---
+
+# 🏠 Real Estate Recommender Expert System (English)
+
+> Rule-based inference engine developed with **CLIPS 6.3x** for the Artificial Intelligence (AI) course — Bachelor's Degree in Computer Engineering.
+
+*Leer en otros idiomas: [Español](#-sistema-experto-de-recomendación-de-viviendas)*
+
+---
+
+## 📋 General Overview
+
+This project implements a **real estate recommender expert system** that, given an applicant's profile (mandatory restrictions, service preferences, and personal characteristics), evaluates a knowledge base of properties and automatically classifies and sorts them based on their suitability.
+
+The system interviews the user through an interactive dialog, abstracts data into symbolic categories, applies a set of heuristic rules, and issues a final recommendation with qualitative labels (`Highly_Recommended`, `Suitable`, `Partially_Suitable`), detailing unfulfilled requirements and extra advantages of each property.
+
+The evaluated property catalog includes **100 instances** of types `Vivienda` (Property), `ViviendaVertical` (Apartment), and `Duplex`, along with a map of spatially distributed **urban services** (hospitals, green areas, public transport, educational centers, etc.).
+
+---
+
+## 🎯 Objectives and Applied Skills
+
+| Skill | Description |
+|---|---|
+| **Knowledge representation** | Domain modeling using CLIPS classes (`defclass`) with inheritance hierarchies (`Vivienda → ViviendaVertical → Duplex`) |
+| **Formal ontology** | Design and export of OWL/Turtle ontology (`mi-ontologia.ttl`) formalizing domain classes and properties |
+| **Declarative rule-based programming** | Over 50 `defrule` rules organized by modules with priority control via `salience` |
+| **Modular architecture** | 5-module pipeline chained with `focus` and visibility controlled via `import/export` |
+| **Data abstraction** | Transformation of numerical values to symbolic categories (e.g., price → low/medium/high) |
+| **Heuristic reasoning** | Association of flaws and advantages to each property for qualitative classification |
+| **Refinement and sorting** | Prioritization of results using negative `salience` and `deftemplate` templates |
+| **Test data generation** | Python scripts to generate synthetic CLIPS instances parametrically |
+| **Experimental validation** | Suite of 7 test cases (`jocs de proves`) with documented outputs |
+
+---
+
+## 🏗️ Architecture and File Structure
+
+The project follows a sequential **5-module pipeline** architecture with explicit flow control:
+
+```text
+IA_Practica2/
+│
+├── 📂 src/                          # Main source code
+│   ├── 1_input.clp                  # MODULE 1 — Classes, input functions and interactive dialog
+│   ├── 2_abstraccion.clp            # MODULE 2 — Symbolic categorization of numeric attributes
+│   ├── 3_heuristicas.clp            # MODULE 3 — Heuristic associations and classification engine
+│   ├── 4_refinamiento.clp           # MODULE 4 — Sorting results by priority
+│   ├── 5_salida.clp                 # MODULE 5 — Formatted presentation of results
+│   ├── 6_main.clp                   # Flow control: chains the 5 modules with focus
+│   ├── instancias.clp               # Knowledge base: 100 properties + urban services
+│   ├── mi-ontologia.ttl             # OWL/Turtle domain ontology (Protégé)
+│   ├── prototipo1.clp               # Initial MVP prototype (numeric scoring system)
+│   ├── prototipo3.clp               # Prototype 3 prior to final version
+│   └── comandosParaEjecutar.txt     # CLIPS commands sequence to load and execute
+│
+├── 📂 scripts/                      # Python support tools
+│   ├── generadorViviendas.py        # Random instance generator (Vivienda/ViviendaVertical/Duplex)
+│   ├── generadorServicios.py        # Random instance generator for services (hospitals, leisure, etc.)
+│   └── porcentajes.py               # Results analyzer: calculates % of properties by category
+│
+├── 📂 docs/                         # Project documentation
+│   ├── enunciado/
+│   │   └── PracticaSBC.pdf          # Official assignment statement
+│   └── informe/
+│       └── Informe.pdf              # Submitted technical report
+│
+├── 📂 jocsDeProbes/                 # Test cases with logged dialogs and outputs
+│   ├── jocProbes1/sortida.txt       # Test 1: Couple without children, high floor, many restrictions
+│   ├── jocProbes2/sortida.txt       # Test 2: Second validation scenario
+│   ├── jocProbes4/sortida.txt       # Test 4: Profile with minimal restrictions
+│   ├── jocProbes5/sortida.txt       # Test 5: Young applicant / student
+│   ├── jocProbes6/sortida.txt       # Test 6: Applicant with reduced mobility
+│   └── jocProbes9/                  # Test 9: Case with no valid properties (fallback)
+│       ├── DialogWindow.txt         # Full logged user dialog
+│       └── fallback.txt             # System output when no suitable properties exist
+│
+└── README.md                        # This file
+```
+
+### Inference Pipeline Diagram
+
+```text
+  [User]
+      │
+      ▼
+┌─────────────┐    ┌──────────────────┐    ┌─────────────────────┐
+│  MODULE 1   │───▶│    MODULE 2      │───▶│     MODULE 3        │
+│   INPUT     │    │   ABSTRACTION    │    │    HEURISTICS       │
+│             │    │                  │    │                     │
+│ • Dialog    │    │ • price → cat.   │    │ • Evals reqs.       │
+│ • Restricts │    │ • size → cat.    │    │ • Detects perks     │
+│ • Prefs.    │    │ • age → cat.     │    │ • Rules by profile  │
+│ • Distances │    │ • booleans → Abs │    │ • Labels category   │
+└─────────────┘    └──────────────────┘    └─────────────────────┘
+                                                      │
+                                                      ▼
+                                           ┌─────────────────────┐
+                                           │     MODULE 4        │
+                                           │    REFINEMENT       │
+                                           │                     │
+                                           │ • Sorts by perks    │
+                                           │ • Manages priority  │
+                                           └─────────────────────┘
+                                                      │
+                                                      ▼
+                                           ┌─────────────────────┐
+                                           │     MODULE 5        │
+                                           │      OUTPUT         │
+                                           │                     │
+                                           │ • Ordered list      │
+                                           │ • Flaws / Perks     │
+                                           │ • Global summary    │
+                                           └─────────────────────┘
+```
+
+---
+
+## ⚙️ Technologies and Tools
+
+| Tool | Version | Usage |
+|---|---|---|
+| **CLIPS** | 6.30 / 6.31 | Rule-based inference engine (main language) |
+| **Python** | 3.x | Auxiliary scripts for data generation and analysis |
+| **Faker** (Python lib) | latest | Random data generation for instances |
+| **OWL / Turtle (TTL)** | OWL 2 | Formal domain ontology |
+| **Protégé** | 5.x | Visual OWL ontology editor |
+| **Git** | — | Version control |
+
+---
+
+## 🚀 Requirements and Installation
+
+### Prerequisites
+
+- **CLIPS 6.30+** — [Download from clipsrules.net](https://www.clipsrules.net/)
+- **Python 3.x** (only for auxiliary scripts)
+- Python library `faker`: `pip install faker`
+
+### Steps to run the system
+
+**1. Clone the repository:**
+```bash
+git clone https://github.com/ishaaaakkk/IA_Practica2.git
+cd IA_Practica2
+```
+
+**2. Open CLIPS** (GUI or command line):
+```bash
+clips
+```
+
+**3. Load all modules in order** (copy and paste into CLIPS console):
+```clips
+(load "src/1_input.clp")
+(load "src/instancias.clp")
+(load "src/2_abstraccion.clp")
+(load "src/3_heuristicas.clp")
+(load "src/4_refinamiento.clp")
+(load "src/5_salida.clp")
+(load "src/6_main.clp")
+(reset)
+(run)
+```
+
+> 💡 You can also directly copy the contents of `src/comandosParaEjecutar.txt` and run it in the CLIPS console.
+
+**4. Answer the interactive dialog** — The system will ask questions about:
+- Age and type of applicant
+- Desired property type (house / apartment) and preferred floor
+- Maximum monthly budget
+- Mandatory restrictions (elevator, pets, furnished, etc.)
+- Proximity preferences to urban services
+
+### Generate new instances (optional)
+
+```bash
+# Generate 100 random properties in CLIPS format
+python3 scripts/generadorViviendas.py > src/instancias_nuevas.clp
+
+# Generate random urban services
+python3 scripts/generadorServicios.py >> src/instancias_nuevas.clp
+
+# Analyze result distribution of a test case
+python3 scripts/porcentajes.py
+# (requires a sortida.txt file in the working directory)
+```
+
+---
+
+## ✨ Main Features
+
+### Property Classification System
+- **Three recommendation labels**: `Highly_Recommended`, `Suitable`, and `Partially_Suitable`, assigned via declarative rules with priority control (`salience`).
+- **Smart fallback**: If no property meets the minimum criteria, the system communicates this explicitly.
+
+### OOP Class Hierarchy in CLIPS
+- Base class `Vivienda` with 20+ attributes.
+- Subclass `ViviendaVertical` (adds `planta`, `atico`).
+- Subclass `Duplex` (adds `numPlantas`).
+- Class `Solicitante` with dynamic preferences and restrictions.
+- Class `Servicio` with geospatial coordinates.
+
+### Automatic Symbolic Abstraction
+- Price (€/month) → `low` / `medium` / `high`
+- Number of rooms → `small` / `medium` / `large`
+- Area (m²) → `small` / `medium` / `large`
+- Construction year → `recent` / `modern` / `old`
+- Floor → `low` / `medium` / `high`
+
+### Heuristics Engine with Profile-Specific Rules
+- Extra rules for **elderly people** (perk if there's a nearby hospital).
+- Extra rules for **young people** (perk if there's nearby nightlife or urban center).
+- Extra rules for **students** (perk if there's a nearby educational center or public transport).
+- Extra rules for **couples with children** (perk if there's a school or green area at a medium distance).
+- Extra rules for **people with reduced mobility** (perk if there's an elevator, even if not explicitly requested).
+- Extra rules for **applicants without a car** (perk if there's public transport nearby).
+
+### Geospatial Distance Calculation
+- Euclidean distance between property and service to classify each service as `close` (< 500 u.), `medium` (500–1000 u.), or `far` (> 1000 u.).
+
+### Intelligent Result Sorting
+- `Highly_Recommended` properties are sorted by the number of extra perks (descending).
+- `Suitable` properties only appear if there are no `Highly_Recommended` ones.
+- `Partially_Suitable` properties only appear if there are no better options, sorted by the number of flaws (ascending).
+
+### Full Decision Traceability
+- The system shows for each recommended property: its ID, recommendation degree, list of **UNFULFILLED requirements**, and list of detected **extra perks**.
+- At the end, it prints a **global summary** of all flaws per property to facilitate debugging.
+
+### Test Case Suite
+- 7 validation scenarios documented in `jocsDeProbes/`, covering profiles like: couple without children, student, person with reduced mobility, applicant with no restrictions, and a case with no valid properties.
+
+### Python Utility Scripts
+- **`generadorViviendas.py`**: generates N CLIPS instances of type `Vivienda`, `ViviendaVertical`, or `Duplex` with realistic random attributes.
+- **`generadorServicios.py`**: generates urban service instances distributed on a 2000×2000 unit map.
+- **`porcentajes.py`**: parses system output and calculates the percentage of properties classified in each category.
+
+---
+
+## 📂 Quick File Reference
+
+| File | Description | Location |
+|---|---|---|
+| `1_input.clp` | Input module: classes, functions, and dialog | `src/` |
+| `2_abstraccion.clp` | Abstraction module: symbolic categorization | `src/` |
+| `3_heuristicas.clp` | Heuristic engine: 30+ evaluation rules | `src/` |
+| `4_refinamiento.clp` | Results sorting module | `src/` |
+| `5_salida.clp` | Results presentation module | `src/` |
+| `6_main.clp` | Entry point: chains the 5 modules | `src/` |
+| `instancias.clp` | 100 properties + urban services | `src/` |
+| `mi-ontologia.ttl` | Formal OWL domain ontology | `src/` |
+| `prototipo1.clp` | Initial MVP with numerical scoring | `src/` |
+| `prototipo3.clp` | Intermediate version prior to final system | `src/` |
+| `comandosParaEjecutar.txt` | Load sequence for CLIPS | `src/` |
+| `generadorViviendas.py` | Synthetic property generator | `scripts/` |
+| `generadorServicios.py` | Synthetic service generator | `scripts/` |
+| `porcentajes.py` | Statistical analysis of results | `scripts/` |
+| `PracticaSBC.pdf` | Official assignment statement | `docs/enunciado/` |
+| `Informe.pdf` | Submitted technical report | `docs/informe/` |
+| `jocProbesN/sortida.txt` | Outputs of test cases (N=1,2,4,5,6,9) | `jocsDeProbes/` |
+
+---
+
+## 👥 Authors
+
+Developed by **Ishak Felfoul** y **Eduard Corrons** as an academic project for the **Artificial Intelligence (AI)** course of the Bachelor's Degree in Computer Engineering.
 
 ---
 
