@@ -1,6 +1,6 @@
 # 🏠 Sistema Experto de Recomendación de Viviendas
 
-> Motor de inferencia basado en reglas desarrollado con **CLIPS 6.3x** para la asignatura de Sistemes Basats en el Coneixement (SBC) — Grado en Ingeniería Informática.
+> Motor de inferencia basado en reglas desarrollado con **CLIPS 6.3x** para la asignatura de Inteligencia Artificial (IA) — Grado en Ingeniería Informática.
 
 ---
 
@@ -25,7 +25,6 @@ El catálogo de viviendas evaluado incluye **100 instancias** de tipo `Vivienda`
 | **Abstracción de datos** | Transformación de valores numéricos a categorías simbólicas (ej. precio → bajo/medio/alto) |
 | **Razonamiento heurístico** | Asociación de fallos y ventajas sobre cada vivienda para clasificarla cualitativamente |
 | **Refinamiento y ordenación** | Priorización de resultados usando `salience` negativo y plantillas `deftemplate` |
-| **Ingeniería del Conocimiento (LLMs)** | Uso de Modelos de Lenguaje mediante *Role-Playing* para la elicitación del conocimiento experto |
 | **Generación de datos de prueba** | Scripts Python para generar instancias CLIPS sintéticas de forma paramétrica |
 | **Validación experimental** | Batería de 7 jocs de proves (casos de prueba) con salidas documentadas |
 
@@ -228,10 +227,6 @@ python3 scripts/porcentajes.py
 ### Batería de casos de prueba
 - 7 escenarios de validación documentados en `jocsDeProbes/`, cubriendo perfiles como: pareja sin hijos, estudiante, persona con movilidad reducida, solicitante sin restricciones y caso sin viviendas válidas.
 
-### Elicitación de Conocimiento con LLMs
-- **Ingeniería de Prompts (Role-Playing)**: Se utilizó Inteligencia Artificial (ChatGPT/Gemini) actuando en el rol de agente inmobiliario experto para extraer el conocimiento del dominio.
-- **Formalización de Heurísticas**: Gracias a las entrevistas estructuradas, se determinaron reglas clave como los rangos de clasificación (precios, antigüedad de la vivienda) y la gestión de prioridades ante preferencias contradictorias de los solicitantes.
-
 ### Scripts de utilidad Python
 - **`generadorViviendas.py`**: genera N instancias CLIPS de tipo `Vivienda`, `ViviendaVertical` o `Duplex` con atributos aleatorios realistas.
 - **`generadorServicios.py`**: genera instancias de servicios urbanos distribuidos en un mapa de 2000×2000 unidades.
@@ -265,7 +260,7 @@ python3 scripts/porcentajes.py
 
 ## 👥 Autores
 
-Desarrollado por **Ishak Felfoul** y **Eduard Corrons** como práctica académica para la asignatura **Sistemes Basats en el Coneixement (SBC)** del Grado en Ingeniería Informática.
+Desarrollado por **Ishak Felfoul** y **Eduard Corrons** como práctica académica para la asignatura **Inteligencia Artificial (IA)** del Grado en Ingeniería Informática.
 
 ---
 
