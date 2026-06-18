@@ -137,7 +137,7 @@ IA_Practica2/
 
 **1. Clonar el repositorio:**
 ```bash
-git clone https://github.com/<tu-usuario>/IA_Practica2.git
+git clone https://github.com/ishaaaakkk/IA_Practica2.git
 cd IA_Practica2
 ```
 
